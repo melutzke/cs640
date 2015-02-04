@@ -10,8 +10,30 @@
 
 public class Iperfer {
 
-    
+    int port;
+    int time;
+    String host;
+    boolean is_server;   
+    boolean is_client;
 
+    void set_port(int port) {
+        this.port = port;
+    }
+    void set_time(int time) {
+        this.time = time;
+    }
+    void set_host(String host) {
+        this.host = host;
+    }
+
+    void make_server() {
+        is_server = true;
+        is_client = false;
+    }
+    void make_client() {
+        is_server = false;
+        is_client = true;
+    }
 
     static void parse_args(String[] args, IperferConfig config) throws Exception {
         String argument_number_error = "Error: missing or additional arguments";
@@ -26,6 +48,7 @@ public class Iperfer {
         // Determine the number of arguments
         switch (args[0]) {
             case "-c":
+                make_client();
                 if (args.length != 7) {
                     //throw new ArgumentNumberException();
                     throw new Exception(argument_number_error);
@@ -72,6 +95,7 @@ public class Iperfer {
                 }
             break;
             case "-s":
+                make_server();
                 if (args.length != 3) {
                     //throw new ArgumentNumberException();
                     throw new Exception(argument_number_error);
