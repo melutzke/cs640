@@ -35,7 +35,7 @@ public class Iperfer {
         is_client = true;
     }
 
-    static void parse_args(String[] args, IperferConfig config) throws Exception {
+    static void parse_args(String[] args) throws Exception {
         String argument_number_error = "Error: missing or additional arguments";
         String argument_format_error = "Error: incorrect format of arguments";
         String port_number_error = "Error: port number must be in the range 1024 to 65535";
@@ -109,10 +109,9 @@ public class Iperfer {
     }
 
     public static void main (String[] args) {
-        IperferConfig config = new IperferConfig();
         //parse args and check for errors
         try {
-            parse_args(args, config);
+            parse_args(args);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;
