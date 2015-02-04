@@ -7,7 +7,6 @@
 //
 
 import java.net.Socket;
-//import java.net.SocketAddress;
 import java.net.ServerSocket;
 import java.io.InputStream;
 
@@ -19,9 +18,9 @@ public class Iperfer {
     static boolean is_server;
 
     static void set_port(int arg_port) throws Exception {
-        //if( arg_port < 1024 || arg_port > 65535 ){
-        //    throw new Exception("Error: port number must be in the range 1024 to 65535");
-        //}
+        if( arg_port < 1024 || arg_port > 65535 ){
+            throw new Exception("Error: port number must be in the range 1024 to 65535");
+        }
         port = arg_port;
     }
 
