@@ -10,27 +10,27 @@
 
 public class Iperfer {
 
-    int port;
-    int time;
-    String host;
-    boolean is_server;   
-    boolean is_client;
+    static int port;
+    static int time;
+    static String host;
+    static boolean is_server;   
+    static boolean is_client;
 
-    void set_port(int port) {
+    static void set_port(int port) {
         this.port = port;
     }
-    void set_time(int time) {
+    static void set_time(int time) {
         this.time = time;
     }
-    void set_host(String host) {
+    static void set_host(String host) {
         this.host = host;
     }
 
-    void make_server() {
+    static void make_server() {
         is_server = true;
         is_client = false;
     }
-    void make_client() {
+    static void make_client() {
         is_server = false;
         is_client = true;
     }
@@ -45,68 +45,37 @@ public class Iperfer {
             //throw new ArgumentNumberException();
             throw new Exception(argument_number_error);
         }
-        // Determine the number of arguments
-        switch (args[0]) {
-            case "-c":
-                make_client();
-                if (args.length != 7) {
-                    //throw new ArgumentNumberException();
-                    throw new Exception(argument_number_error);
-                }
-                //TODO: the repeated code here should be condensed
-                switch (args[1]) {
-                    case "-h":
-                        set_host(args[2]);
-                    break;
-                    case "-p":
-                        set_port(Integer.parseInt(args[2]));
-                    break;
-                    case "-t":
-                        set_time(Integer.parseInt(args[2]));
-                    break;
-                    default:
-                        throw new Exception(argument_format_error);
-                }
-                switch (args[3]) {
-                    case "-h":
-                        set_host(args[4]);
-                    break;
-                    case "-p":
-                        set_port(Integer.parseInt(args[4]));
-                    break;
-                    case "-t":
-                        set_time(Integer.parseInt(args[4]));
-                    break;
-                    default:
-                        throw new Exception(argument_format_error);
-                }
-                switch (args[5]) {
-                    case "-h":
-                        set_host(args[6]);
-                    break;
-                    case "-p":
-                        set_port(Integer.parseInt(args[6]));
-                    break;
-                    case "-t":
-                        set_time(Integer.parseInt(args[6]));
-                    break;
-                    default:
-                        throw new Exception(argument_format_error);
-                }
-            break;
-            case "-s":
-                make_server();
-                if (args.length != 3) {
-                    //throw new ArgumentNumberException();
-                    throw new Exception(argument_number_error);
-                }
-            break;
-            default:
-                //throw new ArgumentFormatException();
-                throw new Exception(argument_format_error);
+
+        for(int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "-c":
+                    make_client();
+                    if(args.length != 7){
+                        throw new Exception(argument_number_error);
+                    }
+                break;
+                case "-s":
+                    make_server();
+                    if(args.length != 3){
+                        throw new Exception(argument_number_error);
+                    }
+                break;
+                case "-h":
+                    set_host(args[i + 1]);
+                    i++;
+                break;
+                case "-p":
+                    set_port(Integer.parseInt(args[i + 1]));
+                    i++;
+                break;
+                case "-t":
+                    set_time(Integer.parseInt(args[i + 1]));
+                    i++;
+                break;
+                default:
+                    throw new Exception(argument_format_error);
+            }
         }
-        return;
-    }
 
     public static void main (String[] args) {
         //parse args and check for errors
