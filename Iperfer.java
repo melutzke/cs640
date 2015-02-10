@@ -105,6 +105,7 @@ public class Iperfer {
                 server_socket = new ServerSocket( port );
                 client_socket = server_socket.accept();
                 int read = 0;
+                long start = System.nanoTime();
 
                 while( read != -1 ){
                     InputStream client_in = client_socket.getInputStream();
@@ -116,7 +117,13 @@ public class Iperfer {
                 }
 
                 server_socket.close();
-                System.out.println("kilobytes read: " + bytes_read / 1000.0);
+
+                double duration = ( System.nanoTime() - start ) / 1000000000L;
+
+                double kilobytes_read = bytes_read / 1000.0;
+                double megabits_read = kilobytes_read / 1000.0 * 8;
+                System.out.print("sent=" + kilobytes_read + " KB ");
+                System.out.println("received=" + megabits_read / duration + " Mbps");
 
             } catch (Exception e){
                 System.out.println(e.getMessage());
@@ -126,15 +133,21 @@ public class Iperfer {
     }
 
     public static void run_client() {
+        double bytes_sent = 0;
+
         byte[] send_bytes = new byte[1000];
         long start = System.nanoTime();
         try {
             Socket server_socket = new Socket(host, port);
             while( ( System.nanoTime() - start ) / 1000000000L < time ){
                 server_socket.getOutputStream().write( send_bytes );
+                bytes_sent += 1000;
             }
-            System.out.println("Done sending! :D :D :D");
             server_socket.close();
+            double kilobytes_sent = bytes_sent / 1000.0;
+            double megabits_sent = kilobytes_sent / 1000.0 * 8;
+            System.out.print("sent=" + kilobytes_sent + " KB ");
+            System.out.println("rate=" + megabits_sent / time + " Mbps");
         } catch(Exception e){
             System.out.println(e.getMessage());
         }
