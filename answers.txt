@@ -1,0 +1,85 @@
+Answers:
+
+Q2)
+Expected latency between h1, h4
+
+Links 1, 2, and 3 are between h1 and h4, so I would expect latency to be latency(L1) + latency(L2) + latency(l3), which we can estimate from our ping tests. 
+80.8
+L1(rtt = 80.5ms) + L2(rtt = 20.5ms) + L3(rtt = 60.6ms) = rtt of 161.6, or one-way of 80.8ms
+
+===> EXPECTED LATENCY: RTT = 161.6 ms, ONE-WAY = 80.8 ms
+===> OBSERVED LATENCY: RTT = 160.4 ms, ONE-WAY = 80.2 ms
+
+We were right on in our guess, we incurred the latency of each link in the chain added together.
+
+
+
+Expected throughput between h1, h4
+
+We know from class that the expected throughput will run about as fast as the minimum-speed link in the network, assuming we have the link to ourselves.
+min(throughput(L1), throughput(L2), throughput(L3)) = 19.232 Mbps
+
+===> EXPECTED THROUGHPUT: 19.232 Mbps (estimated to be a 20Mbps link)
+===> OBSERVED THROUGHPUT @ SERVER: 19.043 Mbps
+
+sent=54748.0 KB rate=19.0428 Mbps
+received=54748.0 KB rate=21.8992 Mbps
+
+Our estimate was pretty much right on, data travelled pretty much as fast as the slowest link in the chain between h1 and h4 could send it back and forth, and was near peak-speed since we weren't sharing the pipe with anyone else at the time.
+
+
+
+Q3)
+Effects of Multiplexing
+
+***** Effects on Latency
+
+We predict that latency will not be effected, since I do not believe bandwidth will not change how long it takes a packet to make it through all the links. From our testing before, we observed that the expected RTT between h1 and h4 is approximately 160 ms. I believe we will again observe an RTT of approximately 160 ms, since packet switching (multiplexing) will not change how long it takes to get a packet through the network, only the effective bandwidth of a host-to-host link.
+
+===> EXPECTED LATENCY OF EACH PAIR: ~ 160 ms
+===> OBSERVED LATENCY OF A SINGLE PAIR: 160.8 ms
+
+This is exactly what I would expect from two sets of hosts pinging over a shared line. The vast majority of the line is unused, so packets will not queue up. There will be minimal (if any) delay from the shared connection.
+
+***** Effects on Bandwidth
+
+Bandwidth will be affected, however. I believe bandwidth will be approximately split, and will be the lowest bandwidth of the chain they all share divided by number of people communicating simultaneously across that link. We know from previous tests that the slowest link is approximately 20Mbps (taken down to about 19 Mbps via Ethernet error correction and other overhead), so if two pairs talk over this link at the same time, I would estimate an observed bandwidth around 10 Mbps for two pairs, 6.67 Mbps for three pairs.
+
+===> EXPECTED THROUGHPUT OF TWO PAIRs: ~ 10 Mbps
+===> EXPECTED THROUGHPUT OF THREE PAIRS: ~ 6.67 Mbps
+
+===> OBSERVED THROUGHPUT OF TWO PAIRS: h7 -> h9 = 7.495 Mbps, h1 -> h4 = 13.328 Mbps
+===> OBSERVED THROUGHPUT OF THREE PAIR: h7 -> h9 = 7.12 Mbps, h1 -> h4 = 5.43 Mbps, h8 -> h10 = 6.50 Mbps
+
+This ended up being close to what I expected. We saturated the link at approximately 20 Mbps. I am unsure as to why we observe one pair being slightly starved in comparison to the other pair ( 7.495 Mbps vs 13.328 Mbps ). It could be that I didn't start them at the exact same time, so one took the full link for about a quarter second and biased results. Either way, I'm not too worried, this is close enough to what I would expect.
+
+Q4)
+Effects of Latency
+
+***** Effects on Latency
+
+h1 communicates with h4 through L1, L2, and L3.
+h5 communicates with h6 through L4, L2, and L5.
+
+From our previous measurements, we know h1 - h4's expected RTT is approximately 160 ms.
+Calculating latency from h5 - h6, latency(l4) + latency(l2) + latency(l5), we find that its expected RTT should be
+10.4 ms + 20.5 ms + 10.5 ms = ~ 41.4 ms
+
+===> EXPECTED LATENCY OF h1 -> h4: ~ RTT 160 ms
+===> EXPECTED LATENCY OF h5 -> h6: ~ RTT 41.4 ms
+
+===> OBSERVED LATENCY OF h1 -> h4: RTT 160.9 ms
+===> OBSERVED LATENCY OF h5 -> h6: RTT 40.8 ms
+
+Our expectations were right on, and our reasoning was correct.
+
+***** Effects on Bandwidth
+
+Both pairs of hosts (h1 - h4, h5 - h6) only share one link, and that is L2. I would expect each host to get approximately half the bandwidth of L2, or Bandwidth(L2)/2. L2 has an approximate bandwidth of ~ 40 Mbps, so I would expect each host to average ~ 20 Mbps
+
+===> EXPECTED THROUGHPUT OF EACH PAIR: ~ 20 Mbps
+===> OBSERVED THROUGHPUT OF EACH PAIR: h1 -> h4 = 18.60 Mbps, h5 -> h6 = 20.20 Mbps
+
+Our estimations were correct, both pairs of hosts hovered near ~ 20 Mbps (18.60 Mbps and 20.20 Mbps) between each other.
+
+
