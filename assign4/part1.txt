@@ -1,0 +1,97 @@
+1 a) 
+10 DNS lookups
+3 were redundant
+
+
+1 b) 
+dns request for TLD .COM
+dns request for SLD pinterest on .COM
+dns request for SUBDOMAIN www on pinterest on .COM
+
+#### Name Server Queried	Records Returned
+a.root-servers.net			com.				172800	IN	NS		m.gtld-servers.net.
+
+m.gtld-servers.net			pinterest.com.		172800	IN	NS		ns-577.awsdns-08.net.
+
+ns-577.awsdns-08.net		www.pinterest.com.	3600	IN	CNAME	pinterest.com.
+
+a.root-servers.net			com.				172800	IN	NS		m.gtld-servers.net.
+
+m.gtld-servers.net			pinterest.com.		172800	IN	NS		ns-577.awsdns-08.net.
+
+ns-577.awsdns-08.net 		pinterest.com.		60		IN	A		54.243.203.60
+							pinterest.com.		60		IN	A		107.21.115.126
+							pinterest.com.		60		IN	A		107.21.93.21
+							pinterest.com.		60		IN	A		54.235.190.195
+							pinterest.com.		60		IN	A		54.225.236.117
+							pinterest.com.		60		IN	A		107.22.220.243
+							pinterest.com.		60		IN	A		107.20.207.176
+							pinterest.com.		60		IN	A		54.243.222.169
+
+(DONE)
+
+
+1 c)
+
+(we started by doing a complete lookup)
+
+#### Name Server Queried		Records Returned
+
+(CACHED) a.root-servers.net		com.								172800	IN	NS		m.gtld-servers.net.
+
+m.gtld-servers.net				pinimg.com.							172800	IN	NS		ns-196.awsdns-24.com.
+
+ns-196.awsdns-24.com 			s-passets-cache-ak0.pinimg.com.		300 	IN	CNAME	s-passets-cache-ak.pinimg.com.edgekey.net.
+
+a.root-servers.net 				net.								172800	IN	NS		m.gtld-servers.net.	
+
+m.gtld-servers.net				edgekey.net.						172800	IN	NS		ns1-66.akam.net.
+
+ns1-66.akam.net 				s-passets-cache-ak...edgekey.net. 	21600 	IN 	CNAME 	e10113.d.akamaiedge.net.
+
+a.root-servers.net 				net.								172800	IN	NS		m.gtld-servers.net.	
+
+m.gtld-servers.net				akamaiedge.net.						172800	IN	NS		la1.akamaiedge.net.
+	
+la1.akamaiedge.net				d.akamaiedge.net.					6000	IN	NS		n6d.akamaiedge.net.
+	
+n6d.akamaiedge.net 				e10113.d.akamaiedge.net. 			20		IN	A		23.222.72.114 
+
+(DONE)
+
+
+from this DNS query path, we can see that we could use the cached .com lookup, provided by a.root-servers.net telling us to go to m.gtld-servers.net for further resolution. Beyond this, no previous lookups help us, but since we do end up having to chase down several CNAME entries, this long chain of DNS resolution does benefit from caching its own lookups (like the NET lookup).
+
+
+2 a) 
+pinterest is the only request that I found to fall under Amazon EC2
+
+www.pinterest.com -> Amazon EC2 - US East (Northern Virginia): 
+
+2 b)
+All seem to come from akamaiedge, judging by their dns server trail
+s-passets-cache-ak0.pinimg.com -> akamaiedge
+s-media-cache-ak0.pinimg.com -> akamaiedge
+connect.facebook.net -> akamaiedge
+s-static.ak.facebook.com -> akamaiedge
+
+2 c)
+A total of 81 requests for resources were issued
+According to the connection view, these 81 requests were served over 17 different vonnections.
+
+www.pinterest.com - Amazon EC2 - 4 requests
+www.facebook.com - facebook's servers - 1 request
+ssl.google-analytics.com - google servers - 2 requests
+s-static.ak.facebook.com - akamaiedge - 1 request
+s-passets-cache-ak0.pinimg.com - akamaiedge - 15 requests
+s-media-cache-ak0.pinimg.com - akamaiedge - 57 requests
+connect.facebook.net - facebook's servers - 1 request
+
+so, totalling up the CDNs, we have
+Amazon EC2 - 			4 requests
+facebook's servers - 	2 requests
+google's servers - 		2 requests
+akamaiedge - 			73 requests
+
+2 d)
+56
